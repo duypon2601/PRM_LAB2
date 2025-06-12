@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/beige">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Danh sách phòng"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:textColor="@color/sea_green"
+        android:padding="16dp"/>
+
+    <ListView
+        android:id="@+id/lvFood"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:divider="@android:color/darker_gray"
+        android:dividerHeight="1dp"
+        android:padding="8dp"/>
+
+    <Button
+        android:id="@+id/btnOrderFood"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Đặt phòng"
+        android:textSize="18sp"
+        android:backgroundTint="@color/sea_green"
+        android:textColor="@android:color/white"
+        android:padding="12dp"
+        android:layout_margin="16dp"/>
+
+</LinearLayout>

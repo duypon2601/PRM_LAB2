@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">HotelBookingApp</string>
+    <string name="app_title">ỨNG DỤNG ĐẶT PHÒNG KHÁCH SẠN</string>
+    <string name="app_slogan">Nơi mang đến trải nghiệm nghỉ dưỡng tuyệt vời</string>
+    <string name="selected_food_label">Loại phòng đã chọn:</string>
+    <string name="food_price_label">Giá phòng:</string>
+    <string name="selected_drink_label">Dịch vụ đã chọn:</string>
+    <string name="drink_price_label">Giá dịch vụ:</string>
+    <string name="total_price_label">Tổng tiền:</string>
+    <string name="not_selected">Chưa chọn</string>
+    <string name="default_price">0 VNĐ</string>
+    <string name="choose_food">Chọn phòng</string>
+    <string name="choose_drink">Chọn dịch vụ</string>
+
+    <!-- Strings cho FoodActivity -->
+    <string name="choose_food_title">CHỌN LOẠI PHÒNG</string>
+    <string name="order_food">Đặt phòng</string>
+    <string name="food_image_desc">Hình ảnh phòng</string>
+    <string name="delete_room">Xóa</string>
+    <string name="delete_room_confirm">Bạn có chắc muốn xóa phòng này?</string>
+    <string name="yes">Có</string>
+    <string name="no">Không</string>
+
+    <!-- Strings cho DrinkActivity -->
+    <string name="choose_drink_title">CHỌN DỊCH VỤ</string>
+    <string name="order_drink">Đặt dịch vụ</string>
+    <string name="drink_image_desc">Hình ảnh dịch vụ</string>
+
+    <!-- Strings cho BookedRoomsActivity -->
+    <string name="booked_rooms_title">PHÒNG ĐÃ ĐẶT</string>
+    <string name="no_booked_rooms">Chưa có phòng nào được đặt</string>
+    <string name="edit_note">Sửa ghi chú</string>
+    <string name="delete_room_from_booked">Xóa khỏi danh sách đặt</string>
+    <string name="note_hint">Nhập ghi chú cho phòng</string>
+    <string name="save">Lưu</string>
+    <string name="cancel">Hủy</string>
+</resources>
