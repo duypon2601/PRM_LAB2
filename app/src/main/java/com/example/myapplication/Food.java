@@ -1,14 +1,26 @@
 package com.example.myapplication;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
 import java.io.Serializable;
 
+@Entity(tableName = "food")
 public class Food implements Serializable {
+    @PrimaryKey(autoGenerate = true)
     private int id;
+    @ColumnInfo(name = "name")
     private String name;
+    @ColumnInfo(name = "description")
     private String description;
+    @ColumnInfo(name = "price")
     private int price;
+    @ColumnInfo(name = "image_resource")
     private int imageResource;
+    @ColumnInfo(name = "note")
     private String note;
+    @ColumnInfo(name = "is_booked")
     private boolean isBooked;
 
     public Food() {
@@ -20,6 +32,7 @@ public class Food implements Serializable {
         this.isBooked = false;
     }
 
+    @Ignore
     public Food(int id, String name, String description, int price, int imageResource) {
         this.id = id;
         this.name = name;
@@ -60,6 +73,10 @@ public class Food implements Serializable {
 
     public void setPrice(int price) {
         this.price = price;
+    }
+
+    public int getImageResource() {
+        return imageResource;
     }
 
     public int getImageResourceId() {

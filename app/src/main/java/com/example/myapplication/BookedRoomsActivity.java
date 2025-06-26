@@ -14,7 +14,7 @@ import java.util.List;
 
 public class BookedRoomsActivity extends AppCompatActivity implements BookedRoomAdapter.OnRoomActionListener {
     private static final String TAG = "BookedRoomsActivity";
-    private DatabaseHelper dbHelper;
+    private FoodRepository repository;
     private ListView listViewBookedRooms;
     private TextView tvEmpty;
     private BookedRoomAdapter adapter;
@@ -27,7 +27,7 @@ public class BookedRoomsActivity extends AppCompatActivity implements BookedRoom
             setContentView(R.layout.activity_booked_rooms);
             Log.d(TAG, "onCreate: Setting up views");
 
-            dbHelper = new DatabaseHelper(this);
+            repository = new FoodRepository(getApplication());
             listViewBookedRooms = findViewById(R.id.listViewBookedRooms);
             tvEmpty = findViewById(R.id.tvEmpty);
             bookedRooms = new ArrayList<>();
@@ -50,16 +50,28 @@ public class BookedRoomsActivity extends AppCompatActivity implements BookedRoom
     private void setupBookedRoomsList() {
         try {
             Log.d(TAG, "setupBookedRoomsList: Starting");
-            bookedRooms.clear();
-            List<Food> rooms = dbHelper.getBookedRooms();
-            if (rooms != null) {
-                bookedRooms.addAll(rooms);
-                Log.d(TAG, "setupBookedRoomsList: Added " + rooms.size() + " rooms");
-            } else {
-                Log.w(TAG, "setupBookedRoomsList: rooms list is null");
-            }
-            adapter.notifyDataSetChanged();
-            updateEmptyView();
+            // Load booked rooms with multi-threading
+            repository.loadBookedRooms(new FoodRepository.DataCallback<List<Food>>() {
+                @Override
+                public void onResult(List<Food> rooms) {
+                    runOnUiThread(() -> {
+                        try {
+                            bookedRooms.clear();
+                            if (rooms != null) {
+                                bookedRooms.addAll(rooms);
+                                Log.d(TAG, "setupBookedRoomsList: Added " + rooms.size() + " rooms");
+                            } else {
+                                Log.w(TAG, "setupBookedRoomsList: rooms list is null");
+                            }
+                            adapter.notifyDataSetChanged();
+                            updateEmptyView();
+                        } catch (Exception e) {
+                            Log.e(TAG, "setupBookedRoomsList: Error", e);
+                            Toast.makeText(BookedRoomsActivity.this, "Error loading rooms: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+            });
         } catch (Exception e) {
             Log.e(TAG, "setupBookedRoomsList: Error", e);
             Toast.makeText(this, "Error loading rooms: " + e.getMessage(), Toast.LENGTH_LONG).show();
@@ -99,8 +111,16 @@ public class BookedRoomsActivity extends AppCompatActivity implements BookedRoom
                 try {
                     String newNote = input.getText().toString();
                     room.setNote(newNote);
-                    dbHelper.updateRoomNote(room);
-                    adapter.notifyDataSetChanged();
+                    // Update with multi-threading
+                    repository.updateFood(room, new FoodRepository.DataCallback<Void>() {
+                        @Override
+                        public void onResult(Void result) {
+                            runOnUiThread(() -> {
+                                adapter.notifyDataSetChanged();
+                                Toast.makeText(BookedRoomsActivity.this, "Đã cập nhật ghi chú", Toast.LENGTH_SHORT).show();
+                            });
+                        }
+                    });
                 } catch (Exception e) {
                     Log.e(TAG, "onEditNote: Error saving note", e);
                     Toast.makeText(this, "Error saving note: " + e.getMessage(), Toast.LENGTH_LONG).show();
@@ -128,9 +148,16 @@ public class BookedRoomsActivity extends AppCompatActivity implements BookedRoom
                 .setMessage("Bạn có chắc muốn xóa phòng này khỏi danh sách đặt?")
                 .setPositiveButton("Xóa", (dialog, which) -> {
                     try {
-                        dbHelper.unbookRoom(room.getId());
-                        setupBookedRoomsList();
-                        Toast.makeText(this, "Đã xóa phòng khỏi danh sách đặt", Toast.LENGTH_SHORT).show();
+                        // Unbook room with multi-threading
+                        repository.updateBookingStatus(room.getId(), false, "", new FoodRepository.DataCallback<Void>() {
+                            @Override
+                            public void onResult(Void result) {
+                                runOnUiThread(() -> {
+                                    setupBookedRoomsList();
+                                    Toast.makeText(BookedRoomsActivity.this, "Đã xóa phòng khỏi danh sách đặt", Toast.LENGTH_SHORT).show();
+                                });
+                            }
+                        });
                     } catch (Exception e) {
                         Log.e(TAG, "onDeleteRoom: Error deleting room", e);
                         Toast.makeText(this, "Error deleting room: " + e.getMessage(), Toast.LENGTH_LONG).show();
@@ -152,6 +179,14 @@ public class BookedRoomsActivity extends AppCompatActivity implements BookedRoom
         } catch (Exception e) {
             Log.e(TAG, "onResume: Error", e);
             Toast.makeText(this, "Error refreshing rooms: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (repository != null) {
+            repository.shutdown();
         }
     }
 } 
