@@ -88,26 +88,13 @@
                 android:layout_marginTop="8dp">
 
                 <Button
-                    android:id="@+id/btnDelete"
-                    android:layout_width="0dp"
-                    android:layout_height="36dp"
-                    android:layout_weight="1"
-                    android:text="Xóa"
-                    android:textSize="12sp"
-                    android:backgroundTint="@android:color/holo_red_light"
-                    android:textColor="@android:color/white"
-                    android:layout_marginEnd="4dp"/>
-
-                <Button
                     android:id="@+id/btnSelect"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="36dp"
-                    android:layout_weight="1"
                     android:text="Chọn"
                     android:textSize="12sp"
                     android:backgroundTint="@color/sea_green"
-                    android:textColor="@android:color/white"
-                    android:layout_marginStart="4dp"/>
+                    android:textColor="@android:color/white"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

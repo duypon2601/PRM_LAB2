@@ -19,7 +19,6 @@ public class RoomAdapter extends ArrayAdapter<Food> {
     private int selectedPosition = -1;
 
     public interface OnRoomActionListener {
-        void onDeleteRoom(Food room);
         void onSelectRoom(Food room, int position);
     }
 
@@ -43,7 +42,6 @@ public class RoomAdapter extends ArrayAdapter<Food> {
         TextView roomDescription = convertView.findViewById(R.id.roomDescription);
         TextView roomPrice = convertView.findViewById(R.id.roomPrice);
         TextView roomStatus = convertView.findViewById(R.id.roomStatus);
-        Button btnDelete = convertView.findViewById(R.id.btnDelete);
         Button btnSelect = convertView.findViewById(R.id.btnSelect);
 
         roomImage.setImageResource(room.getImageResourceId());
@@ -60,23 +58,15 @@ public class RoomAdapter extends ArrayAdapter<Food> {
             roomStatus.setVisibility(View.VISIBLE);
             roomStatus.setText("ĐÃ ĐẶT");
             roomStatus.setTextColor(Color.RED);
-            btnDelete.setVisibility(View.GONE);
             btnSelect.setText("Đã đặt");
             btnSelect.setEnabled(false);
             btnSelect.setBackgroundColor(Color.GRAY);
         } else {
             roomStatus.setVisibility(View.GONE);
-            btnDelete.setVisibility(View.VISIBLE);
             btnSelect.setText("Chọn");
             btnSelect.setEnabled(true);
             btnSelect.setBackgroundColor(context.getResources().getColor(R.color.sea_green));
         }
-
-        btnDelete.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onDeleteRoom(room);
-            }
-        });
 
         btnSelect.setOnClickListener(v -> {
             if (listener != null && !room.isBooked()) {

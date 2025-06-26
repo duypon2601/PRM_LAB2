@@ -153,27 +153,6 @@ public class RoomManagementActivity extends AppCompatActivity implements RoomAda
     }
 
     @Override
-    public void onDeleteRoom(Food room) {
-        new AlertDialog.Builder(this)
-            .setTitle("Xác nhận xóa")
-            .setMessage("Bạn có chắc muốn xóa phòng này?")
-            .setPositiveButton("Xóa", (dialog, which) -> {
-                // Delete with multi-threading
-                repository.deleteFood(room, new FoodRepository.DataCallback<Void>() {
-                    @Override
-                    public void onResult(Void result) {
-                        runOnUiThread(() -> {
-                            setupRoomList();
-                            Toast.makeText(RoomManagementActivity.this, "Đã xóa phòng", Toast.LENGTH_SHORT).show();
-                        });
-                    }
-                });
-            })
-            .setNegativeButton("Hủy", null)
-            .show();
-    }
-
-    @Override
     public void onSelectRoom(Food room, int position) {
         selectedRoom = room;
         btnBookRoom.setEnabled(true);
