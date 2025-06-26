@@ -7,7 +7,7 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
-    private Button btnSelectRoom;
+    private Button btnViewRooms;
     private Button btnBookedRooms;
 
     @Override
@@ -20,15 +20,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupViews() {
-        btnSelectRoom = findViewById(R.id.btnSelectRoom);
+        btnViewRooms = findViewById(R.id.btnSelectRoom);
         btnBookedRooms = findViewById(R.id.btnBookedRooms);
     }
 
     private void setupClickListeners() {
-        btnSelectRoom.setOnClickListener(new View.OnClickListener() {
+        btnViewRooms.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, FoodActivity.class);
+                Intent intent = new Intent(MainActivity.this, RoomManagementActivity.class);
                 startActivity(intent);
             }
         });

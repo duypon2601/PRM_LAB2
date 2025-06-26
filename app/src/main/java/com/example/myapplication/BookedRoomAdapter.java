@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Button;
 
 import java.util.List;
 
@@ -41,14 +42,25 @@ public class BookedRoomAdapter extends ArrayAdapter<Food> {
         TextView tvRoomDescription = convertView.findViewById(R.id.tvRoomDescription);
         TextView tvRoomPrice = convertView.findViewById(R.id.tvRoomPrice);
         TextView tvRoomNote = convertView.findViewById(R.id.tvRoomNote);
-        View btnEditNote = convertView.findViewById(R.id.btnEditNote);
-        View btnDeleteRoom = convertView.findViewById(R.id.btnDeleteRoom);
+        Button btnEditNote = convertView.findViewById(R.id.btnEditNote);
+        Button btnDeleteRoom = convertView.findViewById(R.id.btnDeleteRoom);
 
         if (ivRoom != null) ivRoom.setImageResource(room.getImageResourceId());
         if (tvRoomName != null) tvRoomName.setText(room.getName());
         if (tvRoomDescription != null) tvRoomDescription.setText(room.getDescription());
-        if (tvRoomPrice != null) tvRoomPrice.setText(String.format("Giá: %d VNĐ", room.getPrice()));
-        if (tvRoomNote != null) tvRoomNote.setText(room.getNote().isEmpty() ? "Không có ghi chú" : room.getNote());
+        if (tvRoomPrice != null) tvRoomPrice.setText(String.format("%,d VNĐ/đêm", room.getPrice()));
+        
+        // Format booking note display
+        if (tvRoomNote != null) {
+            String note = room.getNote();
+            if (note.isEmpty()) {
+                tvRoomNote.setText("Chưa có thông tin đặt phòng");
+                tvRoomNote.setTextColor(context.getResources().getColor(android.R.color.darker_gray));
+            } else {
+                tvRoomNote.setText(note);
+                tvRoomNote.setTextColor(context.getResources().getColor(R.color.sea_green));
+            }
+        }
 
         if (btnEditNote != null) {
             btnEditNote.setOnClickListener(v -> {

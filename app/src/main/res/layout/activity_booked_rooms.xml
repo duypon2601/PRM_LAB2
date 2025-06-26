@@ -8,7 +8,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/booked_rooms_title"
+        android:text="Phòng đã đặt"
         android:textSize="24sp"
         android:textStyle="bold"
         android:gravity="center"
@@ -28,7 +28,7 @@
         android:id="@+id/tvEmpty"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/no_booked_rooms"
+        android:text="Chưa có phòng nào được đặt"
         android:textSize="18sp"
         android:gravity="center"
         android:textColor="@color/sea_green"

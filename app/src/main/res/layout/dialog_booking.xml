@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp"
+        android:background="@color/beige">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Thông tin đặt phòng"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textColor="@color/sea_green"
+            android:layout_marginBottom="20dp"/>
+
+        <EditText
+            android:id="@+id/etGuestName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Tên khách hàng *"
+            android:inputType="textPersonName"
+            android:layout_marginBottom="12dp"
+            android:padding="12dp"
+            android:background="@drawable/edit_text_background"
+            android:textColor="@color/sea_green"
+            android:textColorHint="@color/sea_green"/>
+
+        <EditText
+            android:id="@+id/etPhoneNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Số điện thoại *"
+            android:inputType="phone"
+            android:layout_marginBottom="12dp"
+            android:padding="12dp"
+            android:background="@drawable/edit_text_background"
+            android:textColor="@color/sea_green"
+            android:textColorHint="@color/sea_green"/>
+
+        <EditText
+            android:id="@+id/etCheckInDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Ngày check-in (dd/mm/yyyy) *"
+            android:inputType="date"
+            android:layout_marginBottom="12dp"
+            android:padding="12dp"
+            android:background="@drawable/edit_text_background"
+            android:textColor="@color/sea_green"
+            android:textColorHint="@color/sea_green"/>
+
+        <EditText
+            android:id="@+id/etCheckOutDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Ngày check-out (dd/mm/yyyy) *"
+            android:inputType="date"
+            android:layout_marginBottom="12dp"
+            android:padding="12dp"
+            android:background="@drawable/edit_text_background"
+            android:textColor="@color/sea_green"
+            android:textColorHint="@color/sea_green"/>
+
+        <EditText
+            android:id="@+id/etSpecialRequest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Yêu cầu đặc biệt (không bắt buộc)"
+            android:inputType="textMultiLine"
+            android:minLines="3"
+            android:layout_marginBottom="16dp"
+            android:padding="12dp"
+            android:background="@drawable/edit_text_background"
+            android:textColor="@color/sea_green"
+            android:textColorHint="@color/sea_green"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="* Thông tin bắt buộc"
+            android:textSize="12sp"
+            android:textColor="@android:color/darker_gray"
+            android:gravity="center"/>
+
+    </LinearLayout>
+</ScrollView> 

@@ -101,10 +101,11 @@ public class BookedRoomsActivity extends AppCompatActivity implements BookedRoom
             }
             
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Sửa ghi chú");
+            builder.setTitle("Thêm ghi chú cho phòng");
 
             final EditText input = new EditText(this);
             input.setText(room.getNote());
+            input.setHint("Nhập ghi chú (tên khách, số điện thoại, yêu cầu đặc biệt...)");
             builder.setView(input);
 
             builder.setPositiveButton("Lưu", (dialog, which) -> {
@@ -144,9 +145,9 @@ public class BookedRoomsActivity extends AppCompatActivity implements BookedRoom
             }
 
             new AlertDialog.Builder(this)
-                .setTitle("Xác nhận xóa")
-                .setMessage("Bạn có chắc muốn xóa phòng này khỏi danh sách đặt?")
-                .setPositiveButton("Xóa", (dialog, which) -> {
+                .setTitle("Xác nhận hủy đặt phòng")
+                .setMessage("Bạn có chắc muốn hủy đặt phòng này?")
+                .setPositiveButton("Hủy đặt", (dialog, which) -> {
                     try {
                         // Unbook room with multi-threading
                         repository.updateBookingStatus(room.getId(), false, "", new FoodRepository.DataCallback<Void>() {
@@ -154,7 +155,7 @@ public class BookedRoomsActivity extends AppCompatActivity implements BookedRoom
                             public void onResult(Void result) {
                                 runOnUiThread(() -> {
                                     setupBookedRoomsList();
-                                    Toast.makeText(BookedRoomsActivity.this, "Đã xóa phòng khỏi danh sách đặt", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(BookedRoomsActivity.this, "Đã hủy đặt phòng", Toast.LENGTH_SHORT).show();
                                 });
                             }
                         });
@@ -163,7 +164,7 @@ public class BookedRoomsActivity extends AppCompatActivity implements BookedRoom
                         Toast.makeText(this, "Error deleting room: " + e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 })
-                .setNegativeButton("Hủy", null)
+                .setNegativeButton("Không", null)
                 .show();
         } catch (Exception e) {
             Log.e(TAG, "onDeleteRoom: Error", e);

@@ -12,65 +12,96 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.List;
 
-public class FoodActivity extends AppCompatActivity implements FoodAdapter.OnRoomActionListener {
-    private ListView lvFood;
-    private Button btnOrderFood;
-    private FoodAdapter adapter;
+public class RoomManagementActivity extends AppCompatActivity implements RoomAdapter.OnRoomActionListener {
+    private ListView lvRooms;
+    private Button btnBookRoom;
+    private RoomAdapter adapter;
     private FoodRepository repository;
-    private Food selectedFood;
+    private Food selectedRoom;
     private FloatingActionButton fabAddRoom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_food);
+        setContentView(R.layout.activity_room_management);
 
         repository = new FoodRepository(getApplication());
-        lvFood = findViewById(R.id.lvFood);
-        btnOrderFood = findViewById(R.id.btnOrderFood);
+        lvRooms = findViewById(R.id.lvRooms);
+        btnBookRoom = findViewById(R.id.btnBookRoom);
         fabAddRoom = findViewById(R.id.fabAddRoom);
-        btnOrderFood.setEnabled(false);
+        btnBookRoom.setEnabled(false);
 
-        setupFoodList();
+        setupRoomList();
         setupClickListeners();
     }
 
-    private void setupFoodList() {
+    private void setupRoomList() {
         // Load data with multi-threading
         repository.loadAllFood(new FoodRepository.DataCallback<List<Food>>() {
             @Override
-            public void onResult(List<Food> foodList) {
+            public void onResult(List<Food> roomList) {
                 runOnUiThread(() -> {
-                    adapter = new FoodAdapter(FoodActivity.this, foodList, FoodActivity.this);
-                    lvFood.setAdapter(adapter);
+                    adapter = new RoomAdapter(RoomManagementActivity.this, roomList, RoomManagementActivity.this);
+                    lvRooms.setAdapter(adapter);
                 });
             }
         });
     }
 
     private void setupClickListeners() {
-        btnOrderFood.setOnClickListener(v -> {
-            if (selectedFood != null) {
-                // Book the room with multi-threading
-                repository.updateBookingStatus(selectedFood.getId(), true, selectedFood.getNote(), 
-                    new FoodRepository.DataCallback<Void>() {
-                        @Override
-                        public void onResult(Void result) {
-                            runOnUiThread(() -> {
-                                Toast.makeText(FoodActivity.this, "Đã đặt phòng thành công", Toast.LENGTH_SHORT).show();
-                                
-                                // Return to previous screen
-                                Intent resultIntent = new Intent();
-                                resultIntent.putExtra("selected_food", selectedFood);
-                                setResult(RESULT_OK, resultIntent);
-                                finish();
-                            });
-                        }
-                    });
+        btnBookRoom.setOnClickListener(v -> {
+            if (selectedRoom != null) {
+                showBookingDialog();
             }
         });
 
         fabAddRoom.setOnClickListener(v -> showAddRoomDialog());
+    }
+
+    private void showBookingDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Đặt phòng - " + selectedRoom.getName());
+
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_booking, null);
+        EditText etGuestName = dialogView.findViewById(R.id.etGuestName);
+        EditText etPhoneNumber = dialogView.findViewById(R.id.etPhoneNumber);
+        EditText etCheckInDate = dialogView.findViewById(R.id.etCheckInDate);
+        EditText etCheckOutDate = dialogView.findViewById(R.id.etCheckOutDate);
+        EditText etSpecialRequest = dialogView.findViewById(R.id.etSpecialRequest);
+
+        builder.setView(dialogView);
+
+        builder.setPositiveButton("Đặt phòng", (dialog, which) -> {
+            String guestName = etGuestName.getText().toString().trim();
+            String phoneNumber = etPhoneNumber.getText().toString().trim();
+            String checkInDate = etCheckInDate.getText().toString().trim();
+            String checkOutDate = etCheckOutDate.getText().toString().trim();
+            String specialRequest = etSpecialRequest.getText().toString().trim();
+
+            if (guestName.isEmpty() || phoneNumber.isEmpty() || checkInDate.isEmpty() || checkOutDate.isEmpty()) {
+                Toast.makeText(this, "Vui lòng điền đầy đủ thông tin bắt buộc", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Create booking note
+            String bookingNote = String.format("Khách: %s\nSĐT: %s\nCheck-in: %s\nCheck-out: %s\nYêu cầu: %s", 
+                guestName, phoneNumber, checkInDate, checkOutDate, specialRequest);
+
+            // Book the room with multi-threading
+            repository.updateBookingStatus(selectedRoom.getId(), true, bookingNote, 
+                new FoodRepository.DataCallback<Void>() {
+                    @Override
+                    public void onResult(Void result) {
+                        runOnUiThread(() -> {
+                            Toast.makeText(RoomManagementActivity.this, "Đã đặt phòng thành công", Toast.LENGTH_SHORT).show();
+                            setupRoomList(); // Refresh list
+                        });
+                    }
+                });
+        });
+
+        builder.setNegativeButton("Hủy", (dialog, which) -> dialog.cancel());
+        builder.show();
     }
 
     private void showAddRoomDialog() {
@@ -107,8 +138,8 @@ public class FoodActivity extends AppCompatActivity implements FoodAdapter.OnRoo
                     @Override
                     public void onResult(Long result) {
                         runOnUiThread(() -> {
-                            setupFoodList();
-                            Toast.makeText(FoodActivity.this, "Đã thêm phòng mới", Toast.LENGTH_SHORT).show();
+                            setupRoomList();
+                            Toast.makeText(RoomManagementActivity.this, "Đã thêm phòng mới", Toast.LENGTH_SHORT).show();
                         });
                     }
                 });
@@ -126,33 +157,33 @@ public class FoodActivity extends AppCompatActivity implements FoodAdapter.OnRoo
         new AlertDialog.Builder(this)
             .setTitle("Xác nhận xóa")
             .setMessage("Bạn có chắc muốn xóa phòng này?")
-            .setPositiveButton("Có", (dialog, which) -> {
+            .setPositiveButton("Xóa", (dialog, which) -> {
                 // Delete with multi-threading
                 repository.deleteFood(room, new FoodRepository.DataCallback<Void>() {
                     @Override
                     public void onResult(Void result) {
                         runOnUiThread(() -> {
-                            setupFoodList();
-                            Toast.makeText(FoodActivity.this, "Đã xóa phòng", Toast.LENGTH_SHORT).show();
+                            setupRoomList();
+                            Toast.makeText(RoomManagementActivity.this, "Đã xóa phòng", Toast.LENGTH_SHORT).show();
                         });
                     }
                 });
             })
-            .setNegativeButton("Không", null)
+            .setNegativeButton("Hủy", null)
             .show();
     }
 
     @Override
     public void onSelectRoom(Food room, int position) {
-        selectedFood = room;
-        btnOrderFood.setEnabled(true);
+        selectedRoom = room;
+        btnBookRoom.setEnabled(true);
         adapter.setSelectedPosition(position);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        setupFoodList();
+        setupRoomList();
     }
 
     @Override
@@ -162,4 +193,4 @@ public class FoodActivity extends AppCompatActivity implements FoodAdapter.OnRoo
             repository.shutdown();
         }
     }
-}
+} 
